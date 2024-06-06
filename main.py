@@ -5,14 +5,17 @@ from classes.frontier import Frontier
 from classes.problem import Problem
 from math import sqrt
 
+# ------- Test the map class -------
+
 def test_umt_values(filename, map_obj: Map):
     with open(filename, 'r') as file:
         lines = file.readlines()
     for line in lines:
         y, x, expected_value = map(float, line.strip().split('\t'))
         if round(map_obj.umt_yx(y, x), 3) != expected_value:
-            print(f"Fail: The real value ({round(map_obj.umt_yx(y, x))}) does not match with the expected value ({expected_value}) for the coordinates Y={y}, X={x}")
-           
+            print(f"Error: The actual value ({round(map_obj.umt_yx(y, x))}) does not align with the expected value ({expected_value}) for the coordinates Y={y}, X={x}")
+# ------- Test the state class -------
+          
 def test_successors(filename, map_obj: Map):
     with open(filename, 'r') as f:
         for line in f:
@@ -22,22 +25,17 @@ def test_successors(filename, map_obj: Map):
             state = State(y, x)
             actual_successors = [(action, (y, x), (round(length, 3), round(slope, 3))) for action, (y, x), (length, slope) in state.successor(1, 10000, map_obj)]
             if str(actual_successors) != str(expected_successors):
-                print(f"For {y, x}\nexpected\t{expected_successors}\nbut got\t\t{actual_successors}")
+                print(f"For coordinates {y, x}\nExpected:\t{expected_successors}\nReceived:\t{actual_successors}")
 
 
-
-def is_not_visited(visited_nodes, actual_node: Node):
-    for visited_node in visited_nodes:
-        if visited_node == actual_node.get_state().get_id():
-            return False
-    return True
+# ------- Test the algorithm -------
 
 def algorithm(problem: Problem, strategy, max_depth, destination: State):
+    global GLOBAL_ID
     actual_node = Node(None, None, None, None, None, None, None, None)
     map_obj = Map(problem.get_filename())
     initial_state = problem.get_initial_state()
     frontier = Frontier()
-    global GLOBAL_ID
     GLOBAL_ID = 0
     initial_node = Node(GLOBAL_ID, None, initial_state, 0, 0, (0, 0), calc_heuristic(
         initial_state, strategy, destination), None)
@@ -77,6 +75,12 @@ def expand(node: Node, map_obj, strategy, destination: State):
         childs.append(successor_node)
 
     return childs
+
+def is_not_visited(visited_nodes, actual_node: Node):
+    for visited_node in visited_nodes:
+        if visited_node == actual_node.get_state().get_id():
+            return False
+    return True
 
 def calc_value(node: Node, strategy, destination: State):
     if "DFS" in strategy:
@@ -127,7 +131,7 @@ if __name__ == "__main__":
     # print("Tests passed")
 
     # ------- Test the algorithm -------
-    problem = Problem("data/LaGomera_300_mean.hdf5", State(3117601, 273733))
-    solution = algorithm(problem, "BFS", 500000, State(3107401, 287533))
+    problem = Problem("data/LaGomera_300_mean.hdf5", State(3118801, 273733))
+    solution = algorithm(problem, "GREEDY Manhattan", 500000, State(3106201, 285133))
     for node in solution:
         print(node)    
