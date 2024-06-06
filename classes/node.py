@@ -1,4 +1,4 @@
-from state import State
+from classes.state import State
 
 class Node:
     def __init__(self, node_id, parent, state: State, value, depth, cost, heuristic, action):

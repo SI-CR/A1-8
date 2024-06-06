@@ -101,27 +101,33 @@ def calc_heuristic(state: State, strategy, destination: State):
 
 
 if __name__ == "__main__":
-    # map_obj = Map("data/LaGomera.hdf5")
-    # def calculate_mean(cells):
-    #     new_values = cells[cells != map_obj.nodata_value]
-    #     if len(new_values) == 0:
-    #         return map_obj.nodata_value
-    #     return new_values.mean()
-    # def calculate_max(cells):
-    #     new_values = cells[cells != map_obj.nodata_value]
-    #     if len(new_values) == 0:
-    #         return map_obj.nodata_value
-    #     return new_values.max()
-    # new_map_mean = map_obj.resize(300, calculate_mean, "data/LaGomera_300_mean")
-    # new_map_max = map_obj.resize(400, calculate_max, "data/LaGomera_400_max")
-    # new_map_mean = Map("data/LaGomera_300_mean.hdf5")
-    # new_map_max = Map("data/LaGomera_400_max.hdf5")
-    # test_umt_values("data/test_map_300_mean.txt", new_map_mean)
-    # test_umt_values("data/test_map_400_max.txt", new_map_max)
-    # test_successors('data/sucesores_300_mean.txt', new_map_mean)
-    # test_successors('data/sucesores_400_max.txt', new_map_max)
-    # print("Tests passed")
+
+    # ------- Test the map class -------
+    map_obj = Map("data/LaGomera.hdf5")
+    def calculate_mean(cells):
+        new_values = cells[cells != map_obj.no_data_value]
+        if len(new_values) == 0:
+            return map_obj.no_data_value
+        return new_values.mean()
+    def calculate_max(cells):
+        new_values = cells[cells != map_obj.no_data_value]
+        if len(new_values) == 0:
+            return map_obj.no_data_value
+        return new_values.max()
+    new_map_mean = map_obj.resize(300, calculate_mean, "data/LaGomera_300_mean")
+    new_map_max = map_obj.resize(400, calculate_max, "data/LaGomera_400_max")
+    new_map_mean = Map("data/LaGomera_300_mean.hdf5")
+    new_map_max = Map("data/LaGomera_400_max.hdf5")
+    test_umt_values("data/test_map_300_mean.txt", new_map_mean)
+    test_umt_values("data/test_map_400_max.txt", new_map_max)
+
+    # ------- Test the state class -------
+    test_successors('data/sucesores_300_mean.txt', new_map_mean)
+    test_successors('data/sucesores_400_max.txt', new_map_max)
+    print("Tests passed")
+
+    # ------- Test the algorithm -------
     problem = Problem("data/GomeraZoom300.hdf5", State(3118801, 273133))
     solution = algorithm(problem, "UCS", 500000, State(3106201, 285733))
     for node in solution:
-        print(node)
+        print(node)    
