@@ -63,8 +63,9 @@ def algorithm(problem: Problem, strategy, max_depth, destination: State):
         
 def expand(node: Node, map_obj, strategy, destination: State):
     global GLOBAL_ID
+    global biggest_id
     childs = []
-    successors = node.get_state().successor(1, 100, map_obj)
+    successors = node.get_state().successor(1, 610, map_obj)
     for successor in successors:
         GLOBAL_ID += 1
         successor_state = State(successor[1][0], successor[1][1])
@@ -73,7 +74,10 @@ def expand(node: Node, map_obj, strategy, destination: State):
             calc_heuristic(successor_state, strategy, destination), successor[0])
         successor_node.value = calc_value(successor_node, strategy, destination)
         childs.append(successor_node)
-
+    
+    for child in childs:
+        if child.node_id > biggest_id:
+            biggest_id = child.node_id
     return childs
 
 def is_not_visited(visited_nodes, actual_node: Node):
@@ -107,19 +111,21 @@ def calc_heuristic(state: State, strategy, destination: State):
 if __name__ == "__main__":
 
     # # ------- Test the map class -------
-    # map_obj = Map("data/LaGomera.hdf5")
+    global biggest_id
+    biggest_id = 0
+    map_obj = Map("data/LaGomera.hdf5")
     # def calculate_mean(cells):
     #     new_values = cells[cells != map_obj.no_data_value]
     #     if len(new_values) == 0:
     #         return map_obj.no_data_value
     #     return new_values.mean()
-    # def calculate_max(cells):
-    #     new_values = cells[cells != map_obj.no_data_value]
-    #     if len(new_values) == 0:
-    #         return map_obj.no_data_value
-    #     return new_values.max()
+    def calculate_max(cells):
+        new_values = cells[cells != map_obj.no_data_value]
+        if len(new_values) == 0:
+            return map_obj.no_data_value
+        return new_values.max()
     # new_map_mean = map_obj.resize(300, calculate_mean, "data/LaGomera_300_mean")
-    # new_map_max = map_obj.resize(400, calculate_max, "data/LaGomera_400_max")
+    new_map_max = map_obj.resize(340, calculate_max, "data/LaGomera_340_max")
     # new_map_mean = Map("data/LaGomera_300_mean.hdf5")
     # new_map_max = Map("data/LaGomera_400_max.hdf5")
     # test_umt_values("data/test_map_300_mean.txt", new_map_mean)
@@ -131,7 +137,8 @@ if __name__ == "__main__":
     # print("Tests passed")
 
     # ------- Test the algorithm -------
-    problem = Problem("data/LaGomera_300_mean.hdf5", State(3118801, 273733))
-    solution = algorithm(problem, "GREEDY Manhattan", 500000, State(3106201, 285133))
+    problem = Problem("data/LaGomera_340_max.hdf5", State(3121521, 272533))
+    solution = algorithm(problem, "A* Manhattan", 500000, State(3104521, 286133))
     for node in solution:
         print(node)    
+    print("The expanded node with biggest id is:", biggest_id)

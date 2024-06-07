@@ -32,7 +32,8 @@ class State:
         # actions.append(("SE", (self.y - length, self.x + length), (float(length * sqrt(2)), abs(map_obj.umt_yx(self.y, self.x) - map_obj.umt_yx(self.y - length, self.x + length)))))
         actions.append(("S", (self.y - length, self.x), (float(length), abs(map_obj.umt_yx(self.y, self.x) - map_obj.umt_yx(self.y - length, self.x)))))
         # actions.append(("SW", (self.y - length, self.x - length), (float(length * sqrt(2)), abs(map_obj.umt_yx(self.y, self.x) - map_obj.umt_yx(self.y - length, self.x - length)))))
-        actions.append(("O", (self.y, self.x - length), (float(length), abs(map_obj.umt_yx(self.y, self.x) - map_obj.umt_yx(self.y, self.x - length)))))
+        actions.append(("W", (self.y, self.x - length), (float(length), abs(map_obj.umt_yx(self.y, self.x) - map_obj.umt_yx(self.y, self.x - length)))))
+        # O / W
         # actions.append(("NW", (self.y + length, self.x - length), (float(length * sqrt(2)), abs(map_obj.umt_yx(self.y, self.x) - map_obj.umt_yx(self.y + length, self.x - length)))))
         for action in actions:
             if self.validate(action, slope, map_obj):

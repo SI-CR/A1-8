@@ -21,11 +21,11 @@ class Map:
                 if self.no_data_value is None:
                     self.no_data_value = dataset.attrs["nodata_value"]
                 elif self.no_data_value != dataset.attrs["nodata_value"]:
-                    raise Exception("Different nodata values")
+                    raise Exception("Mismatch in nodata values")
                 if self.cell_size is None:
                     self.cell_size = dataset.attrs["cellsize"]
                 elif self.cell_size != dataset.attrs["cellsize"]:
-                    raise Exception("Different cell sizes")
+                    raise Exception("Cell sizes do not match")
                 if self.up_left[1] > xinf:
                     self.up_left = (self.up_left[0], xinf)
                 if self.up_left[0] < ysup:
@@ -36,7 +36,7 @@ class Map:
                     self.down_right = (yinf, self.down_right[1])
             self.dim = (int((self.up_left[0] - self.down_right[0]) / self.cell_size) + 1, int((self.down_right[1] - self.up_left[1]) / self.cell_size) + 1,)
         except Exception as e:
-            print("Problem trying to read the file: ", e)
+            print("Error occurred while reading the file: ", e)
             
     def umt_yx(self, y: int, x: int) -> np.float64:
         for dataset_name in self.f.keys():
