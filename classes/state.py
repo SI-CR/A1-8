@@ -18,7 +18,7 @@ class State:
             and xd >= map_obj.up_left[1]
             and xd <= map_obj.down_right[1]
             and map_obj.umt_yx(yd, xd) != map_obj.no_data_value
-            and action[2][1] < slope
+            and abs(xd-action[2][1]) < slope
         ):  return True
         return False
 
