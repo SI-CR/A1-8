@@ -59,6 +59,9 @@ def algorithm(problem: Problem, strategy, max_depth, destination: State):
             for child in childs:
                 frontier.add_node(child)
 
+    print(actual_node.value)
+    print("d")
+    print(actual_node.depth)
     return actual_node.get_path()
         
 def expand(node: Node, map_obj, strategy, destination: State):
@@ -118,7 +121,7 @@ if __name__ == "__main__":
     #     if len(new_values) == 0:
     #         return map_obj.no_data_value
     #     return new_values.max()
-    # new_map_mean = map_obj.resize(300, calculate_mean, "data/LaGomera_300_mean")
+    new_map_mean = map_obj.resize(340, calculate_mean, "data/LaGomera_340_mean")
     # new_map_max = map_obj.resize(400, calculate_max, "data/LaGomera_400_max")
     # new_map_mean = Map("data/LaGomera_300_mean.hdf5")
     # new_map_max = Map("data/LaGomera_400_max.hdf5")
@@ -129,6 +132,15 @@ if __name__ == "__main__":
     # test_successors('data/sucesores_300_mean.txt', new_map_mean)
     # test_successors('data/sucesores_400_max.txt', new_map_max)
     # print("Tests passed")
+
+    # ------- Test the algorithm -------
+    problem = Problem("data/LaGomera_340_mean.hdf5", State(3114041, 270493))
+    solution = algorithm(problem, "A* Manhattan", 610, State(3112001, 291573))
+    max=0
+    for node in solution:
+        if(max<node.value):
+            max=node.value
+            print(node.value)  
 
     # ------- Test the algorithm -------
     problem = Problem("data/LaGomera_300_mean.hdf5", State(3118801, 273733))
